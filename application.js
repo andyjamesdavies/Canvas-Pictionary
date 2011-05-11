@@ -1,6 +1,8 @@
 
-    var canvas = document.getElementById("myCanvas");
-    var context = canvas.getContext("2d");
+    var canvas = document.getElementById("myCanvas"),
+        context = canvas.getContext("2d"),
+        cWidth = canvas.width,
+        cHeight = canvas.height;
 
     var $canvas = $('canvas'),
         prevX = 0,
@@ -13,28 +15,19 @@
         prevX = e.pageX;
         prevY = e.pageY;
         
+        lineCoords.push({
+            ins: 'pendown',
+            x: prevX,
+            y: prevY
+        });
+        
         $canvas.bind('mousemove', function(e) {
-            
-            lineCoords = [
-                              {
-                                  ins: 'pendown',
-                                  x: 10,
-                                  y: 10
-                              },
-                              {
-                                  ins: 'lineto',
-                                  x: 100,
-                                  y: 100
-                              },
-                              {
-                                  ins: 'lineto',
-                                  x: 90,
-                                  y: 150
-                              },
-                              {
-                                  ins: 'penup'
-                              }
-                          ];
+            lineCoords.push({
+                ins: 'lineto',
+                x: e.pageX,
+                y: e.pageY
+            });
+
             
             draw(lineCoords);
 //            context.beginPath();
@@ -52,12 +45,15 @@
     });
     
     $canvas.mouseup(function(e){
+        lineCoords.push({
+            ins: 'penup'
+        });
         $canvas.unbind('mousemove');
     });
     
     
     var draw = function(coords){
-        
+        context.clearRect(0,0,cWidth,cHeight)
         for ( var i=0; i < coords.length; i++) {
             switch( coords[i].ins ) {
                 case 'pendown':
@@ -74,4 +70,6 @@
             }
             
         }
+        context.stroke();
+
     }
