@@ -65,10 +65,52 @@ PIC.createPad = function (id) {
 
     }
 	
-	// Return some sensible API with which to externally control the sketchpad
-	return {
-			
-	}
+    // Return some sensible API with which to externally control the sketchpad
+    return {
+        
+        // Instructions
+        penDown: function () {
+            prevX = e.pageX;
+            prevY = e.pageY;
+            
+            lineCoords.push({
+                ins: 'pendown',
+                x: prevX,
+                y: prevY
+            });
+        },
+        penUp: function () {
+            lineCoords.push({
+                ins: 'penup'
+            });
+        },
+        moveTo: function (x, y) {
+            
+            lineCoords.push({
+                ins: 'lineto',
+                x: e.pageX,
+                y: e.pageY
+            });
+??????
+            
+            if (isPenDown) {
+                context.lineTo(coords[i].x, coords[i].y);
+            } else {
+                context.moveTo(coords[i].x, coords[i].y);
+            }        
+        },
+        
+        // Events
+        onPenDown: function (callback) {
+            
+        },
+        onPenUp: function (callback) {
+            
+        },
+        onMove: function (callback) {
+            
+        }
+    }
 }
 
 
