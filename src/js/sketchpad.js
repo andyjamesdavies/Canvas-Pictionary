@@ -1,7 +1,87 @@
 var PIC = PIC || {};
 
 PIC.createPad = function (id) {
-	
+    
+    var $canvas = $('#' + id),
+        context = $canvas[0].getContext('2d');
+    
+    context.lineWidth = 4;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    
+    path = [];
+    path.isPenDown = false;
+    path.add = function (word, x, y) {
+        var ins = {}
+        ins.ins = word;
+        if (x && y) {
+            ins.x = x;
+            ins.y = y;
+        }
+        this.push(ins);
+        this.render();
+    };
+    path.render = function () {
+        var i, len, ins;
+            
+        context.clearRect(0,0,10000,10000);
+        
+        for (i=0, len=this.length; i < len; i++) {
+            ins = this[i]
+            switch( ins.ins ) {
+                case 'down':
+                    context.beginPath();
+                    context.moveTo(ins.x, ins.y);
+                    path.isPenDown = true;
+                    break;
+                case 'move':
+                    context.lineTo(ins.x, ins.y);
+                    break;
+                case 'up':
+                    context.stroke();
+                    path.isPenDown = false;
+                    break;
+            }
+        }
+        if (this.isPenDown) {
+        context.stroke();
+            
+        }
+    };
+        
+
+    $canvas.mousedown(function (e) {
+        path.add('down', e.pageX, e.pageY);
+        $(document).bind('mousemove', function (e) {
+            path.add('move', e.pageX, e.pageY);
+        })
+    })
+    $canvas.mouseup(function (e) {
+        path.add('up');
+        $(document).unbind('mousemove');
+    })
+    
+    return {
+        penDown: function () {
+            
+        },
+        penUp: function () {
+            
+        },
+        moveTo: function () {
+            
+        }
+    }
+}
+    
+    
+/*    
+    
+    
+    
+    
+    
+    
 	var canvas = document.getElementById( id ),
         context = canvas.getContext("2d"),
         cWidth = canvas.width,
@@ -91,7 +171,7 @@ PIC.createPad = function (id) {
                 x: e.pageX,
                 y: e.pageY
             });
-??????
+
             
             if (isPenDown) {
                 context.lineTo(coords[i].x, coords[i].y);
@@ -114,4 +194,4 @@ PIC.createPad = function (id) {
 }
 
 
-    
+*/
