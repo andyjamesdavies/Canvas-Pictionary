@@ -3,14 +3,14 @@ var PIC = PIC || {};
 PIC.createPad = function (id) {
     
     var $canvas = $('#' + id),
-        context = $canvas[0].getContext('2d');
-    
-    context.lineWidth = 4;
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    
+        $doc = $(document),
+        context = $canvas[0].getContext('2d'),
+        penX = 0,
+        penY = 0,
+        isPenDown = false,
+        path = [];
+        
     path = [];
-    path.isPenDown = false;
     path.add = function (word, x, y) {
         var ins = {}
         ins.ins = word;
@@ -31,45 +31,55 @@ PIC.createPad = function (id) {
             switch( ins.ins ) {
                 case 'down':
                     context.beginPath();
-                    context.moveTo(ins.x, ins.y);
-                    path.isPenDown = true;
+                    isPenDown = true;
                     break;
                 case 'move':
-                    context.lineTo(ins.x, ins.y);
+                    if (isPenDown) {
+                        context.lineTo(ins.x, ins.y);                        
+                    } else {
+                        context.moveTo(ins.x, ins.y);
+                    }
                     break;
                 case 'up':
                     context.stroke();
-                    path.isPenDown = false;
+                    isPenDown = false;
                     break;
             }
         }
-        if (this.isPenDown) {
-        context.stroke();
-            
+        if (isPenDown) {
+            context.stroke();
         }
     };
         
-
+    context.lineWidth = 4;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    
+    
     $canvas.mousedown(function (e) {
-        path.add('down', e.pageX, e.pageY);
-        $(document).bind('mousemove', function (e) {
+        path.add('move', e.pageX, e.pageY);
+        path.add('down');
+        $doc.bind('mousemove', function (e) {
             path.add('move', e.pageX, e.pageY);
         })
     })
-    $canvas.mouseup(function (e) {
+    $doc.mouseup(function (e) {
         path.add('up');
-        $(document).unbind('mousemove');
+        $doc.unbind('mousemove');
     })
     
     return {
         penDown: function () {
-            
+            path.add('down');
+            path.render();
         },
         penUp: function () {
-            
+            path.add('up');
+            path.render();
         },
-        moveTo: function () {
-            
+        moveTo: function (x, y) {
+            path.add('move', x, y);
+            path.render();
         }
     }
 }
