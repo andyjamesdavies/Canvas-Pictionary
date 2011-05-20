@@ -3,20 +3,15 @@ var http = require('http'),
     io = require('socket.io'),
     server,
     socket,
-	fetch,
 	mimeTypes = {
 		html: 'text/html',
 		css: 'text/css',
 		js: 'text/javascript'
 	}
 
-
 server = http.createServer(function (request, response) {
 	var url = request.url,
 		type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')];
-	//	mimeType = mimeTypes[url.replace(/\.([a-zA-Z])$/, '\1')];
-	
-	console.log('URL', url, type)
 	
 	if (url === '/') {
 		url = '/src/html/index.html'
@@ -40,17 +35,12 @@ server.listen(80);
 
 
 
-
+// Socket business
 socket = io.listen(server); 
 socket.on('connection', function (client) { 
-    // new client is here!
-    
-    client.send('YOOOO')
-        
     console.log('We have connection!')
-    
+    client.send('Hello client!')
     client.on('message', function(data){
-        console.log('Message! ', data)
         socket.broadcast(data)
     }) 
     client.on('disconnect', function(){ }) 
