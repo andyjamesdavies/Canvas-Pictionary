@@ -1,75 +1,99 @@
-var PIC = PIC || {};
+var PIC = window.PIC || {};
+
 
 PIC.createPad = function (id) {
-	
-	var canvas = document.getElementById( id ),
-        context = canvas.getContext("2d"),
-        cWidth = canvas.width,
-        cHeight = canvas.height;
-
-    var $canvas = $('canvas'),
-        prevX = 0,
-        prevY = 0,
-        lineCoords = [];
-   
-    context.lineWidth = 4;
     
-    $canvas.mousedown(function(e){
-        prevX = e.pageX;
-        prevY = e.pageY;
-        
-        lineCoords.push({
-            ins: 'pendown',
-            x: prevX,
-            y: prevY
-        });
-        
-        $canvas.bind('mousemove', function(e) {
-            lineCoords.push({
-                ins: 'lineto',
-                x: e.pageX,
-                y: e.pageY
-            });
-
-            draw(lineCoords);
-        });
-        
-    });
+    var $canvas = $('#' + id),
+        $doc = $(document),
+        context = $canvas[0].getContext('2d'),
+        penX = 0,
+        penY = 0,
+        isPenDown = false,
+        path;
     
-    $canvas.mouseup(function(e){
-        lineCoords.push({
-            ins: 'penup'
-        });
-        $canvas.unbind('mousemove');
-    });
+    // The path is the array that stores the pad's drawing history    
+    path = [];
     
-    var draw = function(coords){
-        context.clearRect(0,0,cWidth,cHeight)
-        for ( var i=0; i < coords.length; i++) {
-            switch( coords[i].ins ) {
-                case 'pendown':
+    // Add instruction to the pad. Accepted values: 'up', 'down', 'move, x, y'
+    path.add = function (word, x, y) {
+        var ins = {}
+        ins.ins = word;
+        if (x && y) {
+            ins.x = x;
+            ins.y = y;
+        }
+        this.push(ins);
+        this.render();
+    };
+    
+    // Clear the canvas and redraw the pad's entire sketch history
+    path.render = function () {
+        var i, len, ins;
+            
+        context.clearRect(0,0,10000,10000);
+        
+        for (i=0, len=this.length; i < len; i++) {
+            ins = this[i]
+            switch( ins.ins ) {
+                case 'down':
                     context.beginPath();
-                    context.moveTo(coords[i].x, coords[i].y);
+                    isPenDown = true;
                     break;
-                case 'lineto':
-                    context.lineTo(coords[i].x, coords[i].y);
+                case 'move':
+                    if (isPenDown) {
+                        context.lineTo(ins.x, ins.y);                        
+                    } else {
+                        context.moveTo(ins.x, ins.y);
+                    }
                     break;
-                case 'penup':
+                case 'up':
                     context.stroke();
-                    context.closePath();
+                    isPenDown = false;
                     break;
             }
-            
         }
-        context.stroke();
-
-    }
-	
-	// Return some sensible API with which to externally control the sketchpad
-	return {
-			
-	}
-}
-
-
+        if (isPenDown) {
+            context.stroke();
+        }
+    };
     
+    
+    // Setup the line styling    
+    context.lineWidth = 4;
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
+    
+    
+    // Mouse events
+    $canvas.mousedown(function (e) {
+        var coords = $canvas.offset();
+        path.add('move', e.pageX - coords.left, e.pageY - coords.top);
+        path.add('down');
+        $doc.bind('mousemove', function (e) {
+            coords = $canvas.offset();
+            path.add('move', e.pageX - coords.left, e.pageY - coords.top);
+        })
+    })
+    $doc.mouseup(function (e) {
+        path.add('up');
+        $doc.unbind('mousemove');
+    })
+    
+    
+    // Return the sketchpad's API
+    return {
+        penDown: function () {
+            path.add('down');
+            path.render();
+        },
+        penUp: function () {
+            path.add('up');
+            path.render();
+        },
+        moveTo: function (x, y) {
+            path.add('move', x, y);
+            path.render();
+        }
+    }
+}
+   
