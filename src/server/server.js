@@ -19,7 +19,7 @@ server = http.createServer(function (request, response) {
 	console.log('URL', url, type)
 	
 	if (url === '/') {
-		url = 'src/html/index.html'
+		url = '/src/html/index.html'
 	}
 	if (url === '/favicon.ico') {
 		fs.readFile('../../' + url, 'binary', function (err, file) {
@@ -39,53 +39,14 @@ server = http.createServer(function (request, response) {
 server.listen(80);
 
 
-/*
-
- = function (url, callback) {
-	
-}
 
 
-render = function (path) {
-	var extension = path.replace(/\.([a-zA-Z])$/, '\1')
-	var mime = mimeTypes[extension];
-	
-	fs.readFile('path', 'binary', function (err, file) {
-		response.writeHead(200, {'Content-Type': mime}); 
-		response.end(file); 
-	})
-}
-
-	
-
-server = http.createServer(function (request, response) {
-	console.log(request.url)
-	handle(request);	
-});
-
-handle = function (request, response) {
-	
-}
-
-server.listen(80);
-
-
-handler('/', function (response) {
-	render('../html/index.html')
-})
-
-fetch('/', function (file, response) {
-	
-})
-
-*/
-/*
-
-  
 socket = io.listen(server); 
 socket.on('connection', function (client) { 
+    // new client is here!
     
-    client.send('YOOOO')        
+    client.send('YOOOO')
+        
     console.log('We have connection!')
     
     client.on('message', function(data){
@@ -93,4 +54,5 @@ socket.on('connection', function (client) {
         socket.broadcast(data)
     }) 
     client.on('disconnect', function(){ }) 
-}); */
+}); 
+
