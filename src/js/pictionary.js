@@ -1,7 +1,8 @@
 (function () {
         
-    var pad = PIC.createPad('myCanvas'),
-        comms = PIC.comms('127.0.0.1').start(); 
+    var pad = PIC.createPad('#myCanvas'),
+        comms = PIC.comms('127.0.0.1').start(),
+        pages = PIC.pages('body');
     
     comms.connect(function () {
         comms.send('Hello server!')
