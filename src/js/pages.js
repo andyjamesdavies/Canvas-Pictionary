@@ -15,13 +15,13 @@ PIC.pages = function (pageSelector) {
     return  {
         // Don't want to couple the page selector and app too tightly,
         // consider better way to do this
-        getPage: function (url) {
+        open: function (url, callback) {
+            $container.load('/src/html/sample.html', callback)
+        },
+        back: function () {
             
         },
-        goBack: function () {
-            
-        },
-        goForwards: function () {
+        forwards: function () {
             
         }
     }
