@@ -1,6 +1,5 @@
 var PIC = window.PIC || {};
 
-
 PIC.pages = function (pageSelector) {
     
     var $container = $(pageSelector),

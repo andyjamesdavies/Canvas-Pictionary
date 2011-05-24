@@ -31,4 +31,40 @@ nav li a {
 }
 section {
     clear: both;
+    padding:0 20px;
 }
+
+#msgs { 
+    width:90%;
+    height: 200px;
+    margin:0 auto; 
+    overflow-y:scroll; 
+    border:1px solid #E0E0E0; 
+}
+
+    #msgs div { 
+        padding:5px; 
+    }
+        
+    div.odd { 
+        background-color: #E0E0E0; 
+    }
+    
+form { 
+    width:90%;
+    margin:0 auto; 
+    text-align:center; 
+    padding:10px; 
+}
+
+    form label { 
+        display:block; 
+        width:400px; 
+        margin:0 auto; 
+        text-align:left; 
+    }
+        
+    form input { 
+        width:400px; 
+        margin-bottom:10px; 
+    }
