@@ -1,22 +1,28 @@
 var PIC = window.PIC || {};
 
+
 PIC.pages = function (pageSelector) {
     
     var $container = $(pageSelector),
-        pages = {
-            '/enter-name':  'enter-name.html',
-            '/overview':    'overview.html',
-            '/set-word':    'set-word.html',
-            '/view-word':   'view-word.html',
-            '/guess-word':  'guess-word.html',
-            '/watch-team':  'watch-team.html'
-        }
+        pages = {}
     
     return  {
-        // Don't want to couple the page selector and app too tightly,
-        // consider better way to do this
+        add: function (url, src, callback) {
+            pages[url] = {
+                src: src,
+                callback: callback
+            }
+        },
         open: function (url, callback) {
-            $container.load('/src/html/sample.html', callback)
+            var page = pages[url];
+            $container.load(page.src, function () {
+                if (typeof page.callback === 'function') {
+                    page.callback();
+                }
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            })
         },
         back: function () {
             
