@@ -9,10 +9,14 @@ PIC.createPad = function (id) {
         penX = 0,
         penY = 0,
         isPenDown = false,
-        path;
+        path = {};
+   
+    $canvas.clear = function() {
+        context.clearRect(0,0,10000,10000);
+    };
     
-    // The path is the array that stores the pad's drawing history    
-    path = [];
+    // The path inst is the array that stores the pad's drawing history    
+    path.inst = [];
     
     // Add instruction to the pad. Accepted values: 'up', 'down', 'move, x, y'
     path.add = function (word, x, y) {
@@ -22,7 +26,7 @@ PIC.createPad = function (id) {
             ins.x = x;
             ins.y = y;
         }
-        this.push(ins);
+        this.inst.push(ins);
         this.render();
     };
     
@@ -30,10 +34,10 @@ PIC.createPad = function (id) {
     path.render = function () {
         var i, len, ins;
             
-        context.clearRect(0,0,10000,10000);
+        $canvas.clear();
         
-        for (i=0, len=this.length; i < len; i++) {
-            ins = this[i]
+        for (i=0, len=this.inst.length; i < len; i++) {
+            ins = this.inst[i]
             switch( ins.ins ) {
                 case 'down':
                     context.beginPath();
@@ -57,12 +61,14 @@ PIC.createPad = function (id) {
         }
     };
     
+    path.clear = function () {
+        this.inst = [];
+    };
     
     // Setup the line styling    
     context.lineWidth = 4;
     context.lineCap = 'round';
     context.lineJoin = 'round';
-    
     
     // Mouse events
     $canvas.mousedown(function (e) {
@@ -82,17 +88,26 @@ PIC.createPad = function (id) {
     
     // Return the sketchpad's API
     return {
-        penDown: function () {
-            path.add('down');
+        penDown: function (x, y) {
+            path.add('down', x, y);
             path.render();
         },
-        penUp: function () {
+        penUp: function (x, y) {
             path.add('up');
             path.render();
         },
         moveTo: function (x, y) {
             path.add('move', x, y);
             path.render();
+        },
+        reset: function() {
+           
+                $canvas.clear();
+                path.clear();
+          
+        },
+        getPath: function() {
+            return path.inst;
         }
     }
 }

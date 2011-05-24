@@ -33,13 +33,21 @@ server = http.createServer(function (request, response) {
 
 server.listen(80);
 
-
-
 // Socket business
 socket = io.listen(server); 
 socket.on('connection', function (client) { 
     console.log('We have connection!')
     client.send('Hello client!')
+    var path = {};
+    path.inst = [
+                        {ins:'move', x:10, y:10},
+                        {ins:'down', x:10, y:10},
+                        {ins:'move', x:100, y:100},
+                        {ins:'up', x:10, y:10}
+                       ];
+    
+    client.send(path)
+                        
     client.on('message', function(data){
         socket.broadcast(data)
     }) 
