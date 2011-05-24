@@ -1,42 +1,44 @@
 (function () {
         
-    var pad = PIC.createPad('myCanvas'),
-        comms = PIC.comms('127.0.0.1').start(); 
+    var comms = PIC.comms('127.0.0.1').start(),
+        pages = PIC.pages('#page'),
+        name = '';
     
-    comms.connect(function () {
-        comms.send('Hello server!')
+    
+    // Add all pages
+    pages.add('/enter-name', '/src/html/enter-name.html', function () {
+        $('#name').val(name)
+        $('#enterName').submit(function (e) {
+            e.preventDefault();
+            name = $('#name').val()
+            pages.open('/overview');
+        });
     });
-    
-    comms.message(function (data) {
-        var obj = {};
-        for (i in data.inst) {
-            obj = data.inst[i];
-            console.log(obj);
-            if (obj.ins) {
-                switch(obj.ins) {
-                    case 'down':
-                        
-                        pad.penDown(obj.x, obj.y);
-                        break;
-                    case 'up':
-                        pad.penUp(obj.x, obj.y);
-                        break;
-                    case 'move':
-                        pad.moveTo(obj.x, obj.y);
-                        break;
-                }
-            }
-        }
-        //console.log('Just in from the server:', data);
+    pages.add('/overview', '/src/html/overview.html', function () {
+        $('.name').text(name);    
     });
-    
-    //setInterval(comms.sendPath, 50);    
-    
-    $('#canvasClear').click(function(e) {
-        e.preventDefault();
-        if ( confirm('This will clear your canvas') ) {
-            pad.reset();
-        }
+    pages.add('/set-word', '/src/html/set-word.html');
+    pages.add('/view-word', '/src/html/view-word.html');
+    pages.add('/guess-word', '/src/html/guess-word.html');
+    pages.add('/watch-team', '/src/html/watch-team.html');
+    pages.add('/sample', '/src/html/sample.html', function () {
+        var pad = PIC.createPad('#myCanvas');
+        comms.connect(function () {
+            comms.send('Hello server!');
+        });
+        comms.message(function (data) {
+            console.log('Just in from the server:', data);
+        });        
     });
 
-}())
+    
+    // Navigation functionality
+    $('nav a').click(function (e) {
+        var url = $(this).attr('href');
+        history.pushState(null, null, url);
+        pages.open(url);
+        e.preventDefault();
+    });
+    
+
+}());

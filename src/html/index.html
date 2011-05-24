@@ -7,10 +7,27 @@
 </head>
 <body>
     <canvas id="myCanvas" width="400" height="300"></canvas>
-    <a href="#" id="canvasClear">Clear canvas</a>
+    <!-- Dev menu -->
+    <nav id="mainNav">
+        <li><a href="/enter-name">Enter name</a></li>
+        <li><a href="/overview">Overview</a></li>
+        <li><a href="/set-word">Set word</a></li>
+        <li><a href="/view-word">View word</a></li>
+        <li><a href="/guess-word">Guess word</a></li>
+        <li><a href="/watch-team">Watch team</a></li>
+        <li><a href="/sample">Sample</a></li>
+    </nav>
+
+    <!-- Page container -->
+    <section id="page">
+        
+    </section>
+
+    <!-- Scripts -->
     <script src="http://127.0.0.1/socket.io/socket.io.js"></script> 
     <script type="text/javascript" src="lib/jquery/jquery.js"></script>
     <script type="text/javascript" src="src/js/comms.js"></script>
+    <script type="text/javascript" src="src/js/pages.js"></script>
     <script type="text/javascript" src="src/js/sketchpad.js"></script>
     <script type="text/javascript" src="src/js/pictionary.js"></script>
 </body>

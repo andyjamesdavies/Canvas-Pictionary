@@ -1,9 +1,9 @@
 var PIC = window.PIC || {};
 
 
-PIC.createPad = function (id) {
+PIC.createPad = function (padSelector) {
     
-    var $canvas = $('#' + id),
+    var $canvas = $(padSelector),
         $doc = $(document),
         context = $canvas[0].getContext('2d'),
         penX = 0,
