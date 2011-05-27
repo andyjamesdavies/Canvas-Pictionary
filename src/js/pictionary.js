@@ -7,6 +7,7 @@
         guess = '';
         teams = {}
     
+    
     // Add all pages
     pages.add('/enter-name', '/src/html/enter-name.html', function () {
         $('#name').val(name).focus();
@@ -89,7 +90,6 @@
     // Navigation functionality
     $('nav a').click(function (e) {
         var url = $(this).attr('href');
-        
         pages.open(url);
         e.preventDefault();
     });
