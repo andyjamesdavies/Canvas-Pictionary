@@ -102,6 +102,9 @@ socket.on('connection', function (client) {
             })
         }
         
+        socket.broadcast(data)
+
+        
     }) 
     client.on('disconnect', function () {} ) 
 }); 
