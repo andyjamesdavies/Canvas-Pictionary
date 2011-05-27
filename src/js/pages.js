@@ -15,6 +15,7 @@ PIC.pages = function (pageSelector) {
         open: function (url, callback) {
             var page = pages[url];
             $container.load(page.src, function () {
+                history.pushState(null, null, url);
                 if (typeof page.callback === 'function') {
                     page.callback();
                 }

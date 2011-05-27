@@ -101,10 +101,8 @@ PIC.createPad = function (padSelector) {
             path.render();
         },
         reset: function() {
-           
-                $canvas.clear();
-                path.clear();
-          
+            $canvas.clear();
+            path.clear();
         },
         getPath: function() {
             return path.inst;
