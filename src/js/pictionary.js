@@ -1,6 +1,6 @@
-(function () {    
-        
-    var comms = PIC.comms('127.0.0.1').start(),
+(function () {
+    var url = document.URL.replace(/http:\/\/([a-zA-Z0-9\.\-\_]+)\/?/, '$1'),
+        comms = PIC.comms(url).start(),
         pages = PIC.pages('#page'),
         name = '',
         word = '',
