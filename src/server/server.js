@@ -28,6 +28,9 @@ var http = require('http'),
     
     
 server = http.createServer(function (request, response) {
+    /*
+    
+    Experimental code for setting up url handlers external to this module. 
     var url = request.url,
         type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')],
         i,
@@ -43,7 +46,8 @@ server = http.createServer(function (request, response) {
     response.writeHead(200, { 'Content-Type': 'text/html' });
     response.end('Hello wolrd');
     
-    /*
+    */
+    
     var url = request.url,
         type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')],
         cookies = {};
@@ -78,7 +82,7 @@ server = http.createServer(function (request, response) {
             response.writeHead(200, { 'Content-Type': type });
             response.end(file);
         }
-    })*/
+    })
 });
 
 

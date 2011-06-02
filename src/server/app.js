@@ -4,12 +4,12 @@ var server = require('./server.js')
     srcDir = './../../src'; 
 
 server.start();
-
+/*
 server.handle('/hello', function () {
     console.log('Inside the handler')
 })
 
-/*
+
 server.handle('*', function (url) {
     server.reply(url);
 })
