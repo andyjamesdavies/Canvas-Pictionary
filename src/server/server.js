@@ -70,13 +70,21 @@ server = http.createServer(function (request, response) {
             console.log('ERR', url, err)
         }
         if (!cookies.uid) {
-           exec('uuidgen', function (error, stdout, stderr) {
-                console.log(typeof stdout)
-                response.writeHead(200, {
-                    'Set-Cookie': 'uid=' + stdout + ' ',  // doesn't work without trailing space
-                    'Content-Type': type
-                });
-                response.end(file);
+           exec('uuid', function (error, stdout, stderr) {
+                var write = function (uid) {
+                    response.writeHead(200, {
+                        'Set-Cookie': 'uid=' + uid + ' ',  // doesn't work without trailing space
+                        'Content-Type': type
+                    });
+                    response.end(file);
+                }
+                if (stderr) {
+                    exec('uuidgen', function (error, stdout, stderr) {
+                        write(stdout)
+                    })
+                } else {
+                    write(stdout)
+                }
             })
         } else {
             response.writeHead(200, { 'Content-Type': type });
