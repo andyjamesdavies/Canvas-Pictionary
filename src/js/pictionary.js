@@ -45,7 +45,12 @@
     
     pages.add('/view-word', '/src/html/view-word.html', function() {
     	$('.word').text(word);
-        var pad = PIC.createPad('#myCanvas');
+        pad = PIC.createPad('#myCanvas');
+        pad.onChange(function (move) {
+            comms.send({
+                draw: move
+            });
+        })
         comms.connect(function () {
             comms.send('Hello server!');
         });
@@ -108,6 +113,9 @@
         if (data.teams) {
             teams = data.teams;
             pages.open('/overview')
+        }
+        if (data.draw) {
+            pad.add(data.draw);
         }
     })
     

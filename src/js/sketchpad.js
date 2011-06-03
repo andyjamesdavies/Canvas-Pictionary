@@ -9,7 +9,8 @@ PIC.createPad = function (padSelector) {
         penX = 0,
         penY = 0,
         isPenDown = false,
-        path = {};
+        path = {},
+        onChangeCallbacks = [];
    
     $canvas.clear = function() {
         context.clearRect(0,0,10000,10000);
@@ -28,6 +29,10 @@ PIC.createPad = function (padSelector) {
         }
         this.inst.push(ins);
         this.render();
+        
+        for (var i=0; i<onChangeCallbacks.length; i++) {
+            onChangeCallbacks[i](arguments)  
+        }
     };
     
     // Clear the canvas and redraw the pad's entire sketch history
@@ -100,12 +105,17 @@ PIC.createPad = function (padSelector) {
             path.add('move', x, y);
             path.render();
         },
-        reset: function() {
+        reset: function () {
             $canvas.clear();
             path.clear();
         },
-        getPath: function() {
+        getPath: function () {
             return path.inst;
+        },
+        onChange: function (callback) {
+            // need to work out how to, on change, to send that info to other
+            // users's pads.
+            onChangeCallbacks.push(callback);
         }
     }
 }
