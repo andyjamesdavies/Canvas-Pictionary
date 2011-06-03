@@ -4,7 +4,8 @@
         pages = PIC.pages('#page'),
         name = '',
         word = '',
-        guess = '';
+        guess = '',
+        chat = PIC.chat(comms);
         teams = {}
     
     
@@ -18,6 +19,7 @@
                 name: name
             })
             $('#self').text(name);
+            $('#username').val(name);
             pages.open('/overview');
         });
     });
@@ -71,21 +73,7 @@
     	});
     });
     
-    pages.add('/watch-team', '/src/html/watch-team.html');
-
-    pages.add('/chat-client', '/src/html/chat-client.html', function() {
-    	var chat = PIC.chat(comms);
-    	
-    	chat.init();
-    	
-        $('#msg').focus();  
-        $('#name').val(name);
-    	
-    	$('#chat').submit(function (e) {
-    		e.preventDefault();
-    		chat.sendMsg();
-    	});
-    });    
+    pages.add('/watch-team', '/src/html/watch-team.html');   
     
     // Navigation functionality
     $('nav a').click(function (e) {
@@ -94,6 +82,12 @@
         e.preventDefault();
     });
     
+    // Chat functionality
+    chat.init();
+    $('#chat').submit(function (e) {
+		e.preventDefault();
+		chat.sendMsg();
+	});
     
     comms.message(function (data) {
         if (data.users) {

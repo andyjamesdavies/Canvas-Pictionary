@@ -29,14 +29,22 @@ nav li a {
     padding: 5px;
     border: 1px solid rgba(0,0,0,0.4)
 }
-section {
+
+#page {
     clear: both;
     padding:0 20px;
+   	width:55%;
+   	float:left;
+}
+
+#chatClient { 
+	float:right;
+	width:38%;
 }
 
 #msgs { 
     width:90%;
-    height: 200px;
+    height: 400px;
     margin:0 auto; 
     overflow-y:scroll; 
     border:1px solid #E0E0E0; 
