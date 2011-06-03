@@ -18,11 +18,23 @@
         <li><a href="/view-word">View word</a></li>
         <li><a href="/guess-word">Guess word</a></li>
         <li><a href="/watch-team">Watch team</a></li>
-        <li><a href="/chat-client">Chat client</a></li>
     </nav>
 
     <!-- Page container -->
     <section id="page"></section>
+
+	<section id="chatClient">
+		<div id="msgs"></div>
+
+		<form id="chat" action="">
+    		<input type="hidden" name="username" id="username" />
+    
+    		<label for="msg">Message:</label>
+        	<input id="msg" type="text" name="message" /><br />
+    
+    		<input type="submit" id="submit" name="submit" value="submit" />
+		</form>
+	</section>
 
     <!-- Scripts -->
     <script src="/socket.io/socket.io.js"></script> 

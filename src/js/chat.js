@@ -8,16 +8,21 @@ PIC.chat = function (comms) {
 				numMsgs = 0;
 		
 			comms.message(function(data){ 
-				var msg = JSON.parse(data);
-				numMsgs++;
-				$('#msgs').append(function() {
-					var div = $('<div class="'+classes[numMsgs%2]+'"></div>');
+				console.log(data);
+
+				if ( data['chat']) {
+					var msg = data['chat'];
+					numMsgs++;
+				
+					$('#msgs').append(function() {
+						var div = $('<div class="'+classes[numMsgs%2]+'"></div>');
 		      
-					div.text(msg.username + ' says: ' + msg.message);
-					return div;
-				});
-				var objDiv = document.getElementById('msgs');
-				objDiv.scrollTop = objDiv.scrollHeight;
+						div.text(msg.username + ' says: ' + msg.message);
+						return div;
+					});
+					var objDiv = document.getElementById('msgs');
+					objDiv.scrollTop = objDiv.scrollHeight;
+				}
 			});			
 		},
 		sendMsg: function() {
@@ -25,8 +30,9 @@ PIC.chat = function (comms) {
 		    $.each($('#chat').serializeArray(), function(i, v){
 		        values[v.name] = v.value;
 		    });
+		    
 		    document.getElementById("msg").value = "";
-		    comms.send(JSON.stringify(values));
+		    comms.send(values, 'chat');
 		}
 	}
 }

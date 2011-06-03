@@ -14,8 +14,16 @@ PIC.comms = function (url) {
             socket.disconnect();
             return this;
         },
-        send: function (data, callback) {
-            socket.send(data)
+        send: function (data, messageType) {
+        	var sendData = {};
+
+        	if (messageType) {
+        		sendData[messageType] = data;
+        	} else {
+        		sendData = data;
+        	}
+
+            socket.send(sendData)
             return this;
         },
         connect: function (callback) {
