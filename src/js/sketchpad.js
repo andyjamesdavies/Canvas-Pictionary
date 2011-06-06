@@ -9,7 +9,7 @@ PIC.createPad = function (selector) {
     
     pen = (function () {
         
-        var $canvas, $doc, context, history, padX, padY, isDown, step;
+        var $canvas, $doc, context, history, padX, padY, isDown, step, isOn;
         
         $canvas = $(selector).first();
         $doc = $(document);
@@ -17,6 +17,7 @@ PIC.createPad = function (selector) {
         padX = $canvas.offset().left;
         padY = $canvas.offset().top;
         isDown = false;
+        isOn = true;
         context = $canvas[0].getContext('2d');
         step = function (actionName) {
             return function (x, y) {
@@ -29,7 +30,6 @@ PIC.createPad = function (selector) {
                 }
                 history.push(newStep);
                 pen.draw();
-                
                                 
                 for (i = 0; i < callbacks.length; i++) {
                     callbacks[i](newStep);  
@@ -44,6 +44,11 @@ PIC.createPad = function (selector) {
         
         // Events
         $canvas.mousedown(function (e) {
+            
+            if (!isOn) {
+                return;
+            }
+            
             pen.down();
             pen.move(e.pageX - padX, e.pageY - padY - 0.001);
             pen.move(e.pageX - padX, e.pageY - padY);
@@ -62,10 +67,19 @@ PIC.createPad = function (selector) {
             down: step('down'),
             move: step('move'),
             clear: function () {
-                context.clearRect(0, 0, 10000, 10000); 
+                context.clearRect(0, 0, 10000, 10000);
+            },
+            disable: function () {
+                isOn = false;
+                $canvas.addClass('receive');
+            },
+            enable: function () {
+                isOn = true;  
+                $canvas.removeClass('receive');
             },
             draw: function () {
                 var i, step, x, y;
+                
                 isDown = false;
                 pen.clear();
                 
@@ -102,6 +116,9 @@ PIC.createPad = function (selector) {
     pad = (function () {
         
         return {
+            receive: function () {
+                pen.disable();
+            },
             history: function () {
                 
             },

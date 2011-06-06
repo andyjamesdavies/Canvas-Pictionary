@@ -66,7 +66,7 @@
     
     pages.add('/guess-word', '/src/html/guess-word.html', function() {
     	pad = PIC.createPad('#myCanvas');
-        
+        pad.receive();
         $('#guess').val(guess);
     	$('#enterGuess').submit(function (e) {
     		e.preventDefault();
