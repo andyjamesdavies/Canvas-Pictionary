@@ -6,6 +6,7 @@ var io = require('socket.io'),
         b: {}
     },
     users = {},
+    drawing = [];
     getCookies = function (str) {
         var cookies = [];
         str.split(';').forEach(function( cookie ) {
@@ -22,6 +23,7 @@ exports.start = function (server) {
     socket.on('connection', function (client) {
     
         client.on('message', function (data) {
+            
             var cookies = {},
                 uid;
                 
@@ -50,7 +52,17 @@ exports.start = function (server) {
                 })
             }
             
-            socket.broadcast(data)
+            if (data.chat) {
+                socket.broadcast(data)
+            }
+            
+            if (data.step) {
+                socket.broadcast(data, client.sessionId);
+            }
+            
+            if (data === 'Can i have a drawing please?') {
+                client.send({drawing: drawing})
+            }
     
         }) 
         client.on('disconnect', function () {} ) 

@@ -41,3 +41,25 @@ Browser
 
 
 Server
+
+----
+
+Decisions:
+
+Team A, B
+Users can come and join at any point
+Best of 5 (or x) rounds
+
+
+Drawer
+- sends instruction/s
+- index, action, coords
+
+Server
+- store the instructions into an array
+- pump them out as and when to subscribers
+
+
+Receiver
+- on log in, subscribe to drawing stream
+- maintain local array of drawing
