@@ -1,112 +1,143 @@
 var PIC = window.PIC || {};
 
 
-PIC.createPad = function (padSelector) {
+PIC.createPad = function (selector) {
     
-    var $canvas = $(padSelector),
-        $doc = $(document),
-        context = $canvas[0].getContext('2d'),
-        penX = 0,
-        penY = 0,
-        isPenDown = false,
-        path = {};
-   
-    $canvas.clear = function() {
-        context.clearRect(0,0,10000,10000);
-    };
+    var pen, pad, callbacks;
     
-    // The path inst is the array that stores the pad's drawing history    
-    path.inst = [];
+    callbacks = [];
     
-    // Add instruction to the pad. Accepted values: 'up', 'down', 'move, x, y'
-    path.add = function (word, x, y) {
-        var ins = {}
-        ins.ins = word;
-        if (x && y) {
-            ins.x = x;
-            ins.y = y;
-        }
-        this.inst.push(ins);
-        this.render();
-    };
-    
-    // Clear the canvas and redraw the pad's entire sketch history
-    path.render = function () {
-        var i, len, ins;
-            
-        $canvas.clear();
+    pen = (function () {
         
-        for (i=0, len=this.inst.length; i < len; i++) {
-            ins = this.inst[i]
-            switch( ins.ins ) {
-                case 'down':
-                    context.beginPath();
-                    isPenDown = true;
-                    break;
-                case 'move':
-                    if (isPenDown) {
-                        context.lineTo(ins.x, ins.y);                        
-                    } else {
-                        context.moveTo(ins.x, ins.y);
-                    }
-                    break;
-                case 'up':
-                    context.stroke();
-                    isPenDown = false;
-                    break;
+        var $canvas, $doc, context, history, padX, padY, isDown, step, isOn;
+        
+        $canvas = $(selector).first();
+        $doc = $(document);
+        history = [];
+        padX = $canvas.offset().left;
+        padY = $canvas.offset().top;
+        isDown = false;
+        isOn = true;
+        context = $canvas[0].getContext('2d');
+        step = function (actionName) {
+            return function (x, y) {
+                var newStep = {}, i;
+                
+                newStep.action = actionName;
+                if (x && y) {
+                    newStep.x = x;
+                    newStep.y = y;
+                }
+                history.push(newStep);
+                pen.draw();
+                                
+                for (i = 0; i < callbacks.length; i++) {
+                    callbacks[i](newStep);  
+                }
+            };
+        };
+        
+        // Setup
+        context.lineWidth = 4;
+        context.lineCap = 'round';
+        context.lineJoin = 'round';
+        
+        // Events
+        $canvas.mousedown(function (e) {
+            
+            if (!isOn) {
+                return;
             }
-        }
-        if (isPenDown) {
-            context.stroke();
-        }
-    };
+            
+            pen.down();
+            pen.move(e.pageX - padX, e.pageY - padY - 0.001);
+            pen.move(e.pageX - padX, e.pageY - padY);
+            
+            $doc.bind('mousemove', function (e) {
+                pen.move(e.pageX - padX, e.pageY - padY);
+            });
+        });
+        $doc.mouseup(function (e) {
+            pen.up();
+            $doc.unbind('mousemove');
+        });
+        
+        return {
+            up: step('up'),
+            down: step('down'),
+            move: step('move'),
+            clear: function () {
+                context.clearRect(0, 0, 10000, 10000);
+            },
+            disable: function () {
+                isOn = false;
+                $canvas.addClass('receive');
+            },
+            enable: function () {
+                isOn = true;  
+                $canvas.removeClass('receive');
+            },
+            draw: function () {
+                var i, step, x, y;
+                
+                isDown = false;
+                pen.clear();
+                
+                for (i = 0; i < history.length; i++) {
+                    step = history[i];
+                    switch (step.action) {
+                        case 'down':
+                            context.beginPath();
+                            isDown = true;
+                            break;
+                        case 'move':
+                            context[isDown ? 'lineTo' : 'moveTo'](step.x, step.y);
+                            break;
+                        case 'up':
+                            context.stroke();
+                            isDown = false;
+                            break;
+                    }
+                }
+                if (isDown) {
+                    context.stroke();
+                }
+            },
+            history: function (newHistory) {
+                if (newHistory) {
+                    history = newHistory
+                }
+                return history;
+            }
+        };    
+    }());
     
-    path.clear = function () {
-        this.inst = [];
-    };
     
-    // Setup the line styling    
-    context.lineWidth = 4;
-    context.lineCap = 'round';
-    context.lineJoin = 'round';
-    
-    // Mouse events
-    $canvas.mousedown(function (e) {
-        var coords = $canvas.offset();
-        path.add('move', e.pageX - coords.left, e.pageY - coords.top);
-        path.add('down');
-        $doc.bind('mousemove', function (e) {
-            coords = $canvas.offset();
-            path.add('move', e.pageX - coords.left, e.pageY - coords.top);
-        })
-    })
-    $doc.mouseup(function (e) {
-        path.add('up');
-        $doc.unbind('mousemove');
-    })
-    
-    
-    // Return the sketchpad's API
-    return {
-        penDown: function (x, y) {
-            path.add('down', x, y);
-            path.render();
-        },
-        penUp: function (x, y) {
-            path.add('up');
-            path.render();
-        },
-        moveTo: function (x, y) {
-            path.add('move', x, y);
-            path.render();
-        },
-        reset: function() {
-            $canvas.clear();
-            path.clear();
-        },
-        getPath: function() {
-            return path.inst;
-        }
-    }
-}
-   
+    pad = (function () {
+        
+        return {
+            receive: function () {
+                pen.disable();
+            },
+            history: function () {
+                
+            },
+            step: function (step) {
+                pen.history(pen.history().concat([step]));
+                pen.draw();
+            },
+            clear: function () {
+                
+            },
+            onStep: function (callback) {
+                callbacks.push(callback);
+            },
+            reset: function () {
+                pen.clear();
+                pen.history([]);
+            }
+        };
+    }());
+
+    return pad;
+};

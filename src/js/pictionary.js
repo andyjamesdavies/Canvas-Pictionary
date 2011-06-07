@@ -47,7 +47,12 @@
     
     pages.add('/view-word', '/src/html/view-word.html', function() {
     	$('.word').text(word);
-        var pad = PIC.createPad('#myCanvas');
+        pad = PIC.createPad('#myCanvas');
+        pad.onStep(function (step) {
+            comms.send({
+                step: step
+            });
+        })
         comms.connect(function () {
             comms.send('Hello server!');
         });
@@ -60,7 +65,9 @@
     });
     
     pages.add('/guess-word', '/src/html/guess-word.html', function() {
-    	$('#guess').val(guess);
+    	pad = PIC.createPad('#myCanvas');
+        pad.receive();
+        $('#guess').val(guess);
     	$('#enterGuess').submit(function (e) {
     		e.preventDefault();
     		guess = $('#guess').val();
@@ -71,6 +78,11 @@
     			$('#feedback').text('Please try again...');
     		}
     	});
+        
+        $('#fetchDrawing').click(function () {
+            comms.send('Can i have a drawing please?')
+        
+        })
     });
     
     pages.add('/watch-team', '/src/html/watch-team.html');   
@@ -91,17 +103,21 @@
     
     comms.message(function (data) {
         if (data.users) {
-        console.log('We got a message!', data)
             var users = '';
             for (u in data.users) {
                 users += data.users[u] + ' ';
             }
             $('#others').text(users)
         }
-        
+        if (data.step) {
+            pad.step(data.step);
+        }
         if (data.teams) {
             teams = data.teams;
             pages.open('/overview')
+        }
+        if (data.draw) {
+            //pad.add(data.draw);
         }
     })
     
