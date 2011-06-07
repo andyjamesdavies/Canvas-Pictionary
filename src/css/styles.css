@@ -1,78 +1,83 @@
-canvas { 
-    border: 1px solid #ccc;
-    cursor: crosshair;
-    margin: 50px;
-    -webkit-border-radius: 5px;
-    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.1)
+canvas {
+				border: 1px solid #ccc;
+				cursor: crosshair;
+				margin: 50px;
+				-webkit-border-radius: 5px;
+				-webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1)
 }
+
 body {
-    margin: 0;
-    padding: 0;
+				margin: 0;
+				padding: 0;
 }
+
 nav {
-    list-style-type: none;
-    padding: 20px;
-    float: left;
+				list-style-type: none;
+				padding: 20px;
+				float: left;
 }
+
 nav:after {
-    content: "";
-    clear: both;
-    height: 0;
-    width: 0;
-    visibility: hidden;
+				content: "";
+				clear: both;
+				height: 0;
+				width: 0;
+				visibility: hidden;
 }
+
 nav li {
-    float: left;
+				float: left;
 }
+
 nav li a {
-    display: block;
-    padding: 5px;
-    border: 1px solid rgba(0,0,0,0.4)
+				display: block;
+				padding: 5px;
+				border: 1px solid rgba(0, 0, 0, 0.4)
 }
 
 #page {
-    clear: both;
-    padding:0 20px;
-   	width:55%;
-   	float:left;
+				clear: both;
+				padding: 0 20px;
+				width: 55%;
+				float: left;
 }
 
-#chatClient { 
-	float:right;
-	width:38%;
+#chatClient {
+				float: right;
+				width: 38%;
 }
 
-#msgs { 
-    width:90%;
-    height: 400px;
-    margin:0 auto; 
-    overflow-y:scroll; 
-    border:1px solid #E0E0E0; 
+#msgs {
+				width: 90%;
+				height: 400px;
+				margin: 0 auto;
+				overflow-y: scroll;
+				border: 1px solid #E0E0E0;
 }
 
-    #msgs div { 
-        padding:5px; 
-    }
-        
-    div.odd { 
-        background-color: #E0E0E0; 
-    }
-    
-form { 
-    width:90%;
-    margin:0 auto; 
-    text-align:center; 
-    padding:10px; 
+#msgs div {
+				padding: 5px;
 }
 
-    form label { 
-        display:block; 
-        width:400px; 
-        margin:0 auto; 
-        text-align:left; 
-    }
-        
-    form input { 
-        width:400px; 
-        margin-bottom:10px; 
-    }
+div.odd {
+				background-color: #E0E0E0;
+}
+
+form {
+				width: 90%;
+				margin: 0 auto;
+				text-align: center;
+				padding: 10px;
+}
+
+form label {
+				display: block;
+				width: 400px;
+				margin: 0 auto;
+				text-align: left;
+}
+
+form input {
+				width: 400px;
+				margin-bottom: 10px;
+}
