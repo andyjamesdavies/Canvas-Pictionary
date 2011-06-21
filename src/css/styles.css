@@ -21,6 +21,7 @@ nav {
     list-style-type: none;
     padding: 20px;
     float: left;
+    width:96%;
 }
 nav:after {
     content: "";
@@ -38,11 +39,17 @@ nav li a {
     border: 1px solid rgba(0,0,0,0.4)
 }
 
+#userInfo { 
+	padding:20px;
+}
+
 #page {
     clear: both;
-    padding:0 20px;
+    margin:0 20px;
+    padding:20px;
    	width:55%;
    	float:left;
+   	border:1px solid #E0E0E0;
 }
 
 #chatClient { 

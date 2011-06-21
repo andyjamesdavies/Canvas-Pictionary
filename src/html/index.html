@@ -7,52 +7,75 @@
 </head>
 <body>
 
-				<p>
-								You are: <strong id="self"></strong>.
-				</p>
+	<!-- Dev menu -->
+	<nav id="mainNav">
+		<li><a href="/">Home</a></li>
+		<li><a href="/overview">Overview</a></li>
+		<li><a href="/set-word">Set word</a></li>
+		<li><a href="/view-word">View word</a></li>
+		<li><a href="/guess-word">Guess word</a></li>
+		<li><a href="/watch-team">Watch team</a></li>
+	</nav>
 
-				<!-- Dev menu -->
-				<nav id="mainNav">
-								<li><a href="/">Home</a>
-								</li>
-								<li><a href="/enter-name">Enter name</a>
-								</li>
-								<li><a href="/overview">Overview</a>
-								</li>
-								<li><a href="/set-word">Set word</a>
-								</li>
-								<li><a href="/view-word">View word</a>
-								</li>
-								<li><a href="/guess-word">Guess word</a>
-								</li>
-								<li><a href="/watch-team">Watch team</a>
-								</li>
-				</nav>
+	<!-- User Info -->
+	<div id="userInfo">
+		<p>You are: <strong id="self"></strong>.</p>
+	</div>
 
-				<!-- Page container -->
-				<section id="page"></section>
+	<!-- Page container -->
+	<section id="page">
+		<!-- Add Name -->
+		<form id="enterName" method="post" action="#">
+				<p>Add Name</p>
+				<input type="text" id="name" value="" /> <input type="submit" id="submitName" value="Submit" />
+		</form>
+		<!-- End Add Name -->
+		
+		<!-- Join Team -->
+		<p>Here are the teams:</p>
 
-				<section id="chatClient">
-								<div id="msgs"></div>
+		<form id="joinTeam" method="post" action="#" class="teams">
+    		<div class="team">
+        		<p>Team A</p>
+        		<ul id="teamA"></ul>
+        		
+        		<!-- <button id="teamA" name="teamA">Join Team A</button> -->
+    		</div>
+    
+    		<div class="team">
+        		<p>Team B</p>
+        		<ul id="teamB"></ul> 
+        		
+        		<!-- <button id="teamB" name="teamB">Join Team B</button> -->
+    		</div>
+		</form>
+		<!-- End Join Team -->
+		
+		<!-- Start Game -->
+		<form id="startGame" method="post" action="#">
+			<p>When you are ready click here to start:</p>
+			<input type="submit" id="submit" name="submit" value="Start" />
+		</form>
+		<!-- End Start Game -->
+	</section>
 
-								<form id="chat" action="">
-												<input type="hidden" name="username" id="username" /> <label
-																for="msg">Message:</label> <input id="msg" type="text"
-																name="message" /><br /> <input type="submit" id="submit"
-																name="submit" value="submit" />
-								</form>
-				</section>
+	<section id="chatClient">
+		<div id="msgs"></div>
 
-				<!-- Scripts -->
-				<script src="/socket.io/socket.io.js"></script>
-				<script type="text/javascript" src="lib/jquery/jquery.js"></script>
-				<script type="text/javascript" src="src/js/comms.js"></script>
-				<script type="text/javascript" src="src/js/pages.js"></script>
-				<script type="text/javascript" src="src/js/sketchpad.js"></script>
-				<script type="text/javascript" src="src/js/chat.js"></script>
-				<script type="text/javascript" src="src/js/pictionary.js"></script>
+		<form id="chat" action="">
+			<input type="hidden" name="username" id="username" /> 
+			<label for="msg">Message:</label> <input id="msg" type="text" name="message" /><br /> 
+			<input type="submit" id="submit" name="submit" value="submit" />
+		</form>
+	</section>
+
+	<!-- Scripts -->
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="lib/jquery/jquery.js"></script>
+	<script type="text/javascript" src="src/js/comms.js"></script>
+	<script type="text/javascript" src="src/js/pages.js"></script>
+	<script type="text/javascript" src="src/js/sketchpad.js"></script>
+	<script type="text/javascript" src="src/js/chat.js"></script>
+	<script type="text/javascript" src="src/js/pictionary.js"></script>
 </body>
 </html>
-
-
-

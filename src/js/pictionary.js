@@ -10,31 +10,31 @@
     
     
     // Add all pages
-    pages.add('/enter-name', '/src/html/enter-name.html', function () {
-        $('#name').val(name).focus();
-        $('#enterName').submit(function (e) {
-            e.preventDefault();
-            name = $('#name').val();
-            comms.send({
-                name: name
-            })
-            $('#self').text(name);
-            $('#username').val(name);
-            pages.open('/overview');
-        });
-    });
-    
-    pages.add('/overview', '/src/html/overview.html', function () {
-        $('#teamA').empty()
-        for (uid in teams.a) {
-            $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
-        }
-        
-        $('#teamB').empty()
-        for (uid in teams.b) {
-            $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
-        }
-    });
+//    pages.add('/enter-name', '/src/html/enter-name.html', function () {
+//        $('#name').val(name).focus();
+//        $('#enterName').submit(function (e) {
+//            e.preventDefault();
+//            name = $('#name').val();
+//            comms.send({
+//                name: name
+//            })
+//            $('#self').text(name);
+//            $('#username').val(name);
+//            pages.open('/overview');
+//        });
+//    });
+//    
+//    pages.add('/overview', '/src/html/overview.html', function () {
+//        $('#teamA').empty()
+//        for (uid in teams.a) {
+//            $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
+//        }
+//        
+//        $('#teamB').empty()
+//        for (uid in teams.b) {
+//            $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
+//        }
+//    });
     
     pages.add('/set-word', '/src/html/set-word.html', function() {
     	$('#word').val(word);
@@ -94,6 +94,19 @@
         e.preventDefault();
     });
     
+    
+    //Name Functionality
+    $('#name').val(name).focus();
+    $('#enterName').submit(function (e) {
+        e.preventDefault();
+        name = $('#name').val();
+        comms.send({
+            name: name
+        })
+        $('#self').text(name);
+        $('#username').val(name);
+    });
+    
     // Chat functionality
     chat.init();
     $('#chat').submit(function (e) {
@@ -101,7 +114,15 @@
 		chat.sendMsg();
 	});
     
+    $('#startGame').submit(function (e) {
+    	console.log('TEST');
+    	e.preventDefault();
+    	pages.open('/set-word');
+    });
+    
     comms.message(function (data) {
+
+    	//Users
         if (data.users) {
             var users = '';
             for (u in data.users) {
@@ -109,13 +130,29 @@
             }
             $('#others').text(users)
         }
+        
+        //Step
         if (data.step) {
             pad.step(data.step);
         }
+        
+        //Teams
         if (data.teams) {
             teams = data.teams;
-            pages.open('/overview')
+            
+            $('#teamA').empty();
+            console.log(teams.a);
+            for (uid in teams.a) {
+                $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
+            }
+            
+            $('#teamB').empty()
+            for (uid in teams.b) {
+                $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
+            }
         }
+        
+        //Draw
         if (data.draw) {
             //pad.add(data.draw);
         }

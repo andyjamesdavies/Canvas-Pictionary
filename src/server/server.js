@@ -69,8 +69,10 @@ server = http.createServer(function (request, response) {
         if (!file) {
             console.log('ERR', url, err)
         }
+        
         if (!cookies.uid) {
            exec('uuid', function (error, stdout, stderr) {
+     	          	   
                 var write = function (uid) {
                     response.writeHead(200, {
                         'Set-Cookie': 'uid=' + uid + ' ',  // doesn't work without trailing space
