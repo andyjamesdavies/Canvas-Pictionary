@@ -6,6 +6,7 @@ var io = require('socket.io'),
         b: {}
     },
     users = {},
+    game = 'pending',
     drawing = [];
     getCookies = function (str) {
         var cookies = [];
@@ -23,6 +24,17 @@ console.log('start')
     socket = io.listen(server).sockets;
     socket.on('connection', function (client) {
 
+        if (Object.keys(users).length >= 4) {
+        	game = 'ready';
+        }
+    	
+    	//send initial data about session
+    	socket.json.send({
+    		users: users,
+    		teams: teams,
+            game: game
+    	});
+    	
         client.on('message', function (data) {
             var cookies = {},
                 uid;
@@ -43,12 +55,20 @@ console.log('start')
                     teams[(teams.a[uid] ? 'a' : 'b')][uid] = data.name;
                 }
                 console.log(teams)
+                
                 // add user to team with fewer players, or random
                 users[uid] = data.name;
+                
+                if (Object.keys(users).length >= 4) {
+                	game = 'ready';
+                }
+                
                 socket.json.send({
                     users: users,
-                    teams: teams
+                    teams: teams,
+                    game: game
                 })
+                
             }
             
             if (data.chat) {
@@ -56,7 +76,6 @@ console.log('start')
             }
             
             if (data.step) {
-				console.log('IFFFFF')
                 client.broadcast.json.send(data);
             }
             
@@ -64,8 +83,32 @@ console.log('start')
                 client.json.send({drawing: drawing})
             }
     
-        }) 
-        client.on('disconnect', function () {} ) 
+        });
+        
+        client.on('disconnect', function () {
+        	
+        	//get user id
+        	uid = client.id;
+        	
+        	//remove from teams;
+        	if (teams.a[uid]) {
+        		delete teams.a[uid];
+        	} else if (teams.b[uid]) {
+        		delete teams.b[uid];
+        	}
+        	delete users[uid];
+        	
+            if (Object.keys(users).length < 4) {
+            	game = 'pending';
+            }
+        	
+        	//send an updated team list to all other users
+        	socket.json.send({
+        		users: users,
+        		teams: teams,
+        		game: game
+        	});
+        } );
     }); 
 
 }

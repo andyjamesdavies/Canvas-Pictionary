@@ -88,13 +88,12 @@
 	});
     
     $('#startGame').submit(function (e) {
-    	console.log('TEST');
     	e.preventDefault();
     	pages.open('/set-word');
     });
     
     comms.message(function (data) {
-console.log(data)
+
     	//Users
         if (data.users) {
             var users = '';
@@ -124,6 +123,28 @@ console.log(data)
             for (uid in teams.b) {
                 $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
             }
+        }
+        
+        var timer = timer || '',
+        	i=10;
+        
+        if (data.game === 'ready') {
+        	
+        	$('#timer').html(i);
+        	
+	        timer = setInterval(function(){
+	        	if (i > 0) {
+	        		i--;
+	        		$('#timer').html(i)
+	        	} else {
+	        		clearInterval(timer);
+	            	pages.open('/set-word');
+	        	}
+	        }, 1000);
+        } else {
+        	
+        	//doesn't work, @toDo: figure out how to stop timer when someone data.game goes back to 'pending'
+        	clearInterval(timer);
         }
         
         //Draw

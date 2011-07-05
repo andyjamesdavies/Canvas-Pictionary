@@ -95,10 +95,6 @@ server = http.createServer(function (request, response) {
     })
 });
 
-
-
-
-
 exports.start = function () {
     server.listen(80);
     sockets.start(server);
