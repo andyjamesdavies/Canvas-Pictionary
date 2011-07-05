@@ -8,8 +8,6 @@ PIC.chat = function (comms) {
 				numMsgs = 0;
 		
 			comms.message(function(data){ 
-				console.log(data);
-
 				if ( data['chat']) {
 					var msg = data['chat'];
 					numMsgs++;

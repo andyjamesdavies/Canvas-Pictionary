@@ -120,7 +120,7 @@
     });
     
     comms.message(function (data) {
-
+console.log(data)
     	//Users
         if (data.users) {
             var users = '';
@@ -132,6 +132,7 @@
         
         //Step
         if (data.step) {
+            console.log('hello, step')
             pad.step(data.step);
         }
         

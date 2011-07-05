@@ -18,11 +18,12 @@ var io = require('socket.io'),
 
 // Socket business
 exports.start = function (server) {
+
+console.log('start')
     socket = io.listen(server).sockets;
     socket.on('connection', function (client) {
 
         client.on('message', function (data) {
-
             var cookies = {},
                 uid;
 
@@ -55,7 +56,8 @@ exports.start = function (server) {
             }
             
             if (data.step) {
-                socket.json.emit(data, client.sessionId);
+				console.log('IFFFFF')
+                client.broadcast.json.send(data);
             }
             
             if (data === 'Can i have a drawing please?') {
