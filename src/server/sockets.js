@@ -19,7 +19,6 @@ var io = require('socket.io'),
 // Socket business
 exports.start = function (server) {
     socket = io.listen(server).sockets;
-
     socket.on('connection', function (client) {
 
         client.on('message', function (data) {
