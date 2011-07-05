@@ -8,43 +8,17 @@
         chat = PIC.chat(comms);
         teams = {}
     
-    // Add all pages
-//    pages.add('/enter-name', '/src/html/enter-name.html', function () {
-//        $('#name').val(name).focus();
-//        $('#enterName').submit(function (e) {
-//            e.preventDefault();
-//            name = $('#name').val();
-//            comms.send({
-//                name: name
-//            })
-//            $('#self').text(name);
-//            $('#username').val(name);
-//            pages.open('/overview');
-//        });
-//    });
-//    
-//    pages.add('/overview', '/src/html/overview.html', function () {
-//        $('#teamA').empty()
-//        for (uid in teams.a) {
-//            $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
-//        }
-//        
-//        $('#teamB').empty()
-//        for (uid in teams.b) {
-//            $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
-//        }
-//    });
-    
+    // Add all pages    
     pages.add('/set-word', '/src/html/set-word.html', function() {
     	$('#word').val(word);
     	$('#enterWord').submit(function (e) {
     		e.preventDefault();
     		word = $('#word').val();
-    		pages.open('/view-word');
+    		pages.open('/draw-word');
     	});
     });
     
-    pages.add('/view-word', '/src/html/view-word.html', function() {
+    pages.add('/draw-word', '/src/html/draw-word.html', function() {
     	$('.word').text(word);
         pad = PIC.createPad('#myCanvas');
         pad.onStep(function (step) {

@@ -11,11 +11,16 @@ body {
 }
 
 h1 { 
+    font-family: 'Shadows Into Light';
 	clear:both;
 	display:block;
 	width:61%;
 	margin:0 20px;
 	text-align:center;
+    font-size: 5em;
+}
+h2 {
+    display: none;
 }
 
 nav {
