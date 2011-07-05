@@ -18,9 +18,9 @@ var io = require('socket.io'),
 
 // Socket business
 exports.start = function (server) {
-    socket = io.listen(server);
+    socket = io.listen(server).sockets;
 
-    socket.sockets.on('connection', function (client) {
+    socket.on('connection', function (client) {
 
         client.on('message', function (data) {
 
@@ -45,18 +45,18 @@ exports.start = function (server) {
                 console.log(teams)
                 // add user to team with fewer players, or random
                 users[uid] = data.name;
-                socket.sockets.json.send({
+                socket.json.send({
                     users: users,
                     teams: teams
                 })
             }
             
             if (data.chat) {
-                socket.sockets.json.send(data)
+                socket.json.send(data)
             }
             
             if (data.step) {
-                socket.sockets.json.emit(data, client.sessionId);
+                socket.json.emit(data, client.sessionId);
             }
             
             if (data === 'Can i have a drawing please?') {

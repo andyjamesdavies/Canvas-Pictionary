@@ -1,13 +1,4 @@
-canvas { 
-    border: 1px solid #ccc;
-    cursor: crosshair;
-    margin: 50px;
-    -webkit-border-radius: 5px;
-    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.1)
-}
-canvas.receive {
-    cursor: default;
-}
+
 body {
     margin: 0;
     padding: 0;
@@ -16,13 +7,32 @@ body {
     -moz-user-select: none;
     -o-user-select: none;
     user-select: text;
+    background:#f0f0f0;
 }
+
+h1 { 
+	clear:both;
+	display:block;
+	width:61%;
+	margin:0 20px;
+	text-align:center;
+}
+
 nav {
     list-style-type: none;
-    padding: 20px;
+    margin:0 10px 10px 20px;
+    padding:0 5px;
     float: left;
-    width:96%;
+    width:60%;
+    background:#fff;
+    border:1px solid #E0E0E0;
+    border-top:0;
+    
+    -moz-border-radius:0 0 5px 5px;
+	-webkit-border-radius:0 0 5px 5px;
+	border-radius:0 0 5px 5px;
 }
+
 nav:after {
     content: "";
     clear: both;
@@ -30,47 +40,31 @@ nav:after {
     width: 0;
     visibility: hidden;
 }
-nav li {
-    float: left;
-}
-nav li a {
-    display: block;
-    padding: 5px;
-    border: 1px solid rgba(0,0,0,0.4)
+
+	nav li {
+	    float: left;
+	}
+
+		nav li a {
+		    display: block;
+		    padding: 5px;
+		    color:#ccc;
+		}
+		
+		nav li a:hover {
+		    color:#000;
+		}
+
+canvas { 
+    border: 1px solid #ccc;
+    cursor: crosshair;
+    margin: 50px;
+    -webkit-border-radius: 5px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.1)
 }
 
-#userInfo { 
-	padding:20px;
-}
-
-#page {
-    clear: both;
-    margin:0 20px;
-    padding:20px;
-   	width:55%;
-   	float:left;
-   	border:1px solid #E0E0E0;
-}
-
-#chatClient { 
-	float:right;
-	width:38%;
-}
-
-#msgs { 
-    width:90%;
-    height: 400px;
-    margin:0 auto; 
-    overflow-y:scroll; 
-    border:1px solid #E0E0E0; 
-}
-
-#msgs div { 
-    padding:5px; 
-}
-    
-div.odd { 
-    background-color: #E0E0E0; 
+canvas.receive {
+    cursor: default;
 }
 
 form { 
@@ -80,25 +74,87 @@ form {
     padding:10px; 
 }
 
-form label { 
-    display:block; 
-    width:400px; 
-    margin:0 auto; 
-    text-align:left; 
-}
+	form label { 
+	    display:block;  
+	    margin:0 auto; 
+	    text-align:left; 
+	}
     
-form input { 
-    width:400px; 
-    margin-bottom:10px; 
+	form input { 
+	    margin-bottom:10px; 
+	}
+
+#userInfo { 
+	float:right;
+	border:1px solid #E0E0E0;
+	border-top:0;
+	margin:0 20px 0 10px;
+	padding:5px;
+	background:#fff;
+	min-width:32.5%;
+	
+	-moz-border-radius:0 0 5px 5px;
+	-webkit-border-radius:0 0 5px 5px;
+	border-radius:0 0 5px 5px;
 }
+	
+	#userInfo p {
+		margin:0;
+	}
+
+#page {
+    clear: both;
+    min-height:360px;
+    margin:0 10px 0 20px;
+    padding:20px;
+   	width:57.5%;
+   	float:left;
+   	border:1px solid #E0E0E0;
+   	background:#fff;
+   	
+   	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+#chatClient { 
+	float:right;
+	width:33.5%;
+	margin:0 20px 0 10px;
+}
+
+	#chatClient form input {
+		width:100%;
+		padding:2px;
+	}
+
+#msgs { 
+    height: 400px;
+    margin:0 auto; 
+    overflow-y:scroll; 
+    border:1px solid #E0E0E0; 
+    background:#fff;
+    
+    -moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+}
+
+	#msgs div { 
+	    padding:5px; 
+	}
+    
+	#msgs div.odd { 
+	    background-color: #E0E0E0; 
+	}
 
 .teams {
     float: left;
     width: 100%;
 }
 
-.team {
-    margin-bottom: 20px;
-    width: 50%;
-    float: left;
-}
+	.team {
+	    margin-bottom: 20px;
+	    width: 50%;
+	    float: left;
+	}

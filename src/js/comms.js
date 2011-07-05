@@ -7,7 +7,8 @@ PIC.comms = function (url) {
         
     return {
         start: function () {
-//            socket.connect();
+        	//v0.7.x of socket.io means this is not needed as it is done in the initialisation
+            //socket.connect();
             return this;
         },
         stop: function () {
