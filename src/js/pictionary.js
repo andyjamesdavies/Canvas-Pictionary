@@ -8,7 +8,6 @@
         chat = PIC.chat(comms);
         teams = {}
     
-    
     // Add all pages
 //    pages.add('/enter-name', '/src/html/enter-name.html', function () {
 //        $('#name').val(name).focus();

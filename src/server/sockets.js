@@ -20,20 +20,19 @@ var io = require('socket.io'),
 exports.start = function (server) {
     socket = io.listen(server);
 
-    socket.on('connection', function (client) {
-    
+    socket.sockets.on('connection', function (client) {
+
         client.on('message', function (data) {
-            
+
             var cookies = {},
                 uid;
-                
+
             // New name has been received
             if (data.name) {
-                
-                console.log(data.name)
-    
-                cookies = getCookies(client.request.headers.cookie)
-                uid = cookies.uid;
+            	
+            	//Version 0.7.x does not have access the client.request.
+                //cookies = getCookies(client.request.headers.cookie)
+                uid = client.id;
     
                 // If the user isn't a team, assign to a team.
                 // Need to consider the case of a user changing name
@@ -46,22 +45,22 @@ exports.start = function (server) {
                 console.log(teams)
                 // add user to team with fewer players, or random
                 users[uid] = data.name;
-                socket.broadcast({
+                socket.sockets.json.send({
                     users: users,
                     teams: teams
                 })
             }
             
             if (data.chat) {
-                socket.broadcast(data)
+                socket.sockets.json.send(data)
             }
             
             if (data.step) {
-                socket.broadcast(data, client.sessionId);
+                socket.sockets.json.emit(data, client.sessionId);
             }
             
             if (data === 'Can i have a drawing please?') {
-                client.send({drawing: drawing})
+                client.json.send({drawing: drawing})
             }
     
         }) 

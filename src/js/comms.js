@@ -3,11 +3,11 @@ var PIC = window.PIC || {};
 
 PIC.comms = function (url) {
 
-    var socket = new io.Socket(url); 
+    var socket = io.connect(url); 
         
     return {
         start: function () {
-            socket.connect();
+//            socket.connect();
             return this;
         },
         stop: function () {
@@ -23,7 +23,7 @@ PIC.comms = function (url) {
         		sendData = data;
         	}
 
-            socket.send(sendData)
+            socket.json.send(sendData)
             return this;
         },
         connect: function (callback) {

@@ -51,7 +51,7 @@ server = http.createServer(function (request, response) {
     var url = request.url,
         type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')],
         cookies = {};
-    
+
     if (url === '/') {
         type = mimeTypes['html'];
         url = '/src/html/index.html';
