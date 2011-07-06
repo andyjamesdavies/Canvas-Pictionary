@@ -23,17 +23,23 @@ var io = require('socket.io'),
     
     var updateGameStatus = function(socket, data) {	
     	
-    	if (Object.keys(data.users).length >= 4 && data.game.secondsToStart > 0) {
-    		data.game.status = 'ready';
-    		
-    	} else if (Object.keys(data.users).length >= 4 && data.game.secondsToStart === 0) {
-    		data.game.secondsToStart = 0;
-    		data.game.status = 'inProgress';
-    	} else {
-    		data.game.secondsToStart = 10;
-    		data.game.status = 'pending';
+    	
+    	if ( data.game === undefined) {
+    		data.game = game;	
     	}
-    	game = data.game;
+	    	
+    	if (Object.keys(data.users).length >= 4 && data.game.secondsToStart > 0) {
+	    	data.game.status = 'ready';
+	    		
+	    } else if (Object.keys(data.users).length >= 4 && data.game.secondsToStart === 0) {
+	    	data.game.secondsToStart = 0;
+	    	data.game.status = 'inProgress';
+	    } else {
+	    	data.game.secondsToStart = 10;
+	    	data.game.status = 'pending';
+	    }
+	    game = data.game;
+
     	
         socket.json.send({
         	users : users,
@@ -57,8 +63,7 @@ exports.start = function (server) {
     	
         client.on('message', function (data) {
             var cookies = {},
-                uid,
-                timerInt;
+                uid;
 
             // New name has been received
             if (data.name) {

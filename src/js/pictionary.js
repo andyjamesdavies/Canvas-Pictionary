@@ -126,41 +126,44 @@
         }
         
         
-        if (data.game.status === 'ready' && data.game.secondsToStart > 0) {
-        	
-        	//if the game status is posted, clear any timer running
-        	clearInterval(window.intId);
-        	
-        	//create new timer
-        	window.intId = setInterval(function() {
-        		
-        		//update timer feedback
-            	$('#timer').html('The game will begin in ' + data.game.secondsToStart + ' seconds');
-        		
-        		//decrement timer value
-        		data.game.secondsToStart--;
-
-        		//if timer is at zero or below, tell server timer is over and 
-        		//break out of loop
-	            if (data.game.secondsToStart <= 0) {
-	            	clearInterval(window.intId);
-	            	data.game.secondsToStart = 0;
-	            	comms.send({ game : data.game });
-	            	return;
-	            }
-        	}, 1000);
+        if (data.game !== undefined) { 
         
-        } else if (data.game.status === 'inProgress') {
-        
-        	//clear any timer loops and handle next page
-        	clearInterval(window.intId);
-        	pages.open('/set-word');
-        
-        } else {
-        	
-        	//clear any timer loops and update timer feedback
-        	clearInterval(window.intId);
-        	$('#timer').html('Waiting for players to join (min 2 players per team)');
+	        if (data.game.status === 'ready' && data.game.secondsToStart > 0) {
+	        	
+	        	//if the game status is posted, clear any timer running
+	        	clearInterval(window.intId);
+	        	
+	        	//create new timer
+	        	window.intId = setInterval(function() {
+	        		
+	        		//update timer feedback
+	            	$('#timer').html('The game will begin in ' + data.game.secondsToStart + ' seconds');
+	        		
+	        		//decrement timer value
+	        		data.game.secondsToStart--;
+	
+	        		//if timer is at zero or below, tell server timer is over and 
+	        		//break out of loop
+		            if (data.game.secondsToStart <= 0) {
+		            	clearInterval(window.intId);
+		            	data.game.secondsToStart = 0;
+		            	comms.send({ game : data.game });
+		            	return;
+		            }
+	        	}, 1000);
+	        
+	        } else if (data.game.status === 'inProgress') {
+	        
+	        	//clear any timer loops and handle next page
+	        	clearInterval(window.intId);
+	        	pages.open('/set-word');
+	        
+	        } else {
+	        	
+	        	//clear any timer loops and update timer feedback
+	        	clearInterval(window.intId);
+	        	$('#timer').html('Waiting for players to join (min 2 players per team)');
+	        }
         }
         
         //Draw
