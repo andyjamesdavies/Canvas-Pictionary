@@ -5,10 +5,33 @@
         name = '',
         word = '',
         guess = '',
-        chat = PIC.chat(comms);
-        teams = {}
+        chat = PIC.chat(comms),
+        teams = {},
+        pad;
     
     // Add all pages    
+    pages.add('/', '/src/html/home.html', function() { 
+    	
+    	drawTeamsList(teams);
+    	
+        //Name Functionality
+        $('#name').val(name).focus();
+        $('#enterName').submit(function (e) {
+            e.preventDefault();
+            name = $('#name').val();
+            comms.send({
+                name: name
+            })
+            $('#self').text(name);
+            $('#username').val(name);
+        });
+        
+        $('#startGame').submit(function (e) {
+        	e.preventDefault();
+        	pages.open('/set-word');
+        });
+    });    
+        
     pages.add('/set-word', '/src/html/set-word.html', function() {
     	$('#word').val(word);
     	$('#enterWord').submit(function (e) {
@@ -60,24 +83,14 @@
     
     pages.add('/watch-team', '/src/html/watch-team.html');   
     
+    pages.open('/');
+    
     // Navigation functionality
     $('nav a').click(function (e) {
         var url = $(this).attr('href');
+        
         pages.open(url);
         e.preventDefault();
-    });
-    
-    
-    //Name Functionality
-    $('#name').val(name).focus();
-    $('#enterName').submit(function (e) {
-        e.preventDefault();
-        name = $('#name').val();
-        comms.send({
-            name: name
-        })
-        $('#self').text(name);
-        $('#username').val(name);
     });
     
     // Chat functionality
@@ -86,14 +99,10 @@
 		e.preventDefault();
 		chat.sendMsg();
 	});
-    
-    $('#startGame').submit(function (e) {
-    	e.preventDefault();
-    	pages.open('/set-word');
-    });
+
     
     comms.message(function (data) {
-
+    	console.log(data);
     	//Users
         if (data.users) {
             var users = '';
@@ -111,40 +120,47 @@
         
         //Teams
         if (data.teams) {
-            teams = data.teams;
-            
-            $('#teamA').empty();
-            console.log(teams.a);
-            for (uid in teams.a) {
-                $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
-            }
-            
-            $('#teamB').empty()
-            for (uid in teams.b) {
-                $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
-            }
+        	teams = data.teams;
+        	
+            drawTeamsList(data.teams);
         }
         
-        var timer = timer || '',
-        	i=10;
         
-        if (data.game === 'ready') {
+        if (data.game.status === 'ready' && data.game.secondsToStart > 0) {
         	
-        	$('#timer').html(i);
+        	//if the game status is posted, clear any timer running
+        	clearInterval(window.intId);
         	
-	        timer = setInterval(function(){
-	        	if (i > 0) {
-	        		i--;
-	        		$('#timer').html(i)
-	        	} else {
-	        		clearInterval(timer);
-	            	pages.open('/set-word');
-	        	}
-	        }, 1000);
+        	//create new timer
+        	window.intId = setInterval(function() {
+        		
+        		//update timer feedback
+            	$('#timer').html('The game will begin in ' + data.game.secondsToStart + ' seconds');
+        		
+        		//decrement timer value
+        		data.game.secondsToStart--;
+
+        		//if timer is at zero or below, tell server timer is over and 
+        		//break out of loop
+	            if (data.game.secondsToStart <= 0) {
+	            	clearInterval(window.intId);
+	            	data.game.secondsToStart = 0;
+	            	comms.send({ game : data.game });
+	            	return;
+	            }
+        	}, 1000);
+        
+        } else if (data.game.status === 'inProgress') {
+        
+        	//clear any timer loops and handle next page
+        	clearInterval(window.intId);
+        	pages.open('/set-word');
+        
         } else {
         	
-        	//doesn't work, @toDo: figure out how to stop timer when someone data.game goes back to 'pending'
-        	clearInterval(timer);
+        	//clear any timer loops and update timer feedback
+        	clearInterval(window.intId);
+        	$('#timer').html('Waiting for players to join (min 2 players per team)');
         }
         
         //Draw
@@ -152,6 +168,18 @@
             //pad.add(data.draw);
         }
     })
+    
+    function drawTeamsList(teams) {
+        $('#teamA').empty();
+        for (uid in teams.a) {
+            $('#teamA').append('<li>' + teams.a[uid]+ '</li>')
+        }
+        
+        $('#teamB').empty()
+        for (uid in teams.b) {
+            $('#teamB').append('<li>' + teams.b[uid]+ '</li>')
+        }
+    }
     
 
 }());

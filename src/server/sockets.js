@@ -6,9 +6,13 @@ var io = require('socket.io'),
         b: {}
     },
     users = {},
-    game = 'pending',
+    game = { 
+		status:'pending',
+		secondsToStart:10,
+	},
     drawing = [];
-    getCookies = function (str) {
+
+    var getCookies = function (str) {
         var cookies = [];
         str.split(';').forEach(function( cookie ) {
             var parts = cookie.split('=');
@@ -16,28 +20,45 @@ var io = require('socket.io'),
         });
         return cookies;
     };
+    
+    var updateGameStatus = function(socket, data) {	
+    	
+    	if (Object.keys(data.users).length >= 4 && data.game.secondsToStart > 0) {
+    		data.game.status = 'ready';
+    		
+    	} else if (Object.keys(data.users).length >= 4 && data.game.secondsToStart === 0) {
+    		data.game.secondsToStart = 0;
+    		data.game.status = 'inProgress';
+    	} else {
+    		data.game.secondsToStart = 10;
+    		data.game.status = 'pending';
+    	}
+    	game = data.game;
+    	
+        socket.json.send({
+        	users : users,
+        	teams: teams,
+        	game : data.game
+        });
+    };
 
 // Socket business
 exports.start = function (server) {
-
-console.log('start')
+	
     socket = io.listen(server).sockets;
+	
     socket.on('connection', function (client) {
 
-        if (Object.keys(users).length >= 4) {
-        	game = 'ready';
-        }
-    	
-    	//send initial data about session
-    	socket.json.send({
-    		users: users,
-    		teams: teams,
-            game: game
+    	updateGameStatus(socket, {
+    		users: users, 
+    		teams: teams, 
+    		game: game
     	});
     	
         client.on('message', function (data) {
             var cookies = {},
-                uid;
+                uid,
+                timerInt;
 
             // New name has been received
             if (data.name) {
@@ -49,8 +70,12 @@ console.log('start')
                 // If the user isn't a team, assign to a team.
                 // Need to consider the case of a user changing name
                 if (!(teams.a[uid] || teams.b[uid])) {
+                	flag = 0;
+                	if (Object.keys(teams.a).length > Object.keys(teams.b).length) {
+                		flag = 1;
+                	}
+                	
                     teams[flag ? 'b' : 'a'][uid] = data.name;
-                    flag = flag ? 0 : 1;
                 } else {
                     teams[(teams.a[uid] ? 'a' : 'b')][uid] = data.name;
                 }
@@ -59,20 +84,24 @@ console.log('start')
                 // add user to team with fewer players, or random
                 users[uid] = data.name;
                 
-                if (Object.keys(users).length >= 4) {
-                	game = 'ready';
-                }
-                
-                socket.json.send({
-                    users: users,
-                    teams: teams,
-                    game: game
-                })
+                updateGameStatus(socket, {
+            		users: users, 
+            		teams: teams, 
+            		game: game
+            	});
                 
             }
             
             if (data.chat) {
                 socket.json.send(data)
+            }
+            
+            if (data.game) {
+            	updateGameStatus(socket, {
+            		users: users,
+            		teams: teams,
+            		game: data.game
+            	});
             }
             
             if (data.step) {
@@ -98,14 +127,9 @@ console.log('start')
         	}
         	delete users[uid];
         	
-            if (Object.keys(users).length < 4) {
-            	game = 'pending';
-            }
-        	
-        	//send an updated team list to all other users
-        	socket.json.send({
-        		users: users,
-        		teams: teams,
+        	updateGameStatus(socket, {
+        		users: users, 
+        		teams: teams, 
         		game: game
         	});
         } );
