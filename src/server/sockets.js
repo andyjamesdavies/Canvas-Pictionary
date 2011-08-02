@@ -21,6 +21,21 @@ var io = require('socket.io'),
         return cookies;
     };
     
+    function pickRandomProperty(sourceArray) {
+
+    	for (var n = 0; n < sourceArray.length - 1; n++) {
+            var k = n + Math.floor(Math.random() * (sourceArray.length - n));
+
+            var temp = sourceArray[k];
+            sourceArray[k] = sourceArray[n];
+            sourceArray[n] = temp;
+        }
+
+    	result = sourceArray[0];
+    	
+        return result;
+    }
+    
     var updateGameStatus = function(socket, data) {	
     	
     	
@@ -34,7 +49,19 @@ var io = require('socket.io'),
 	    } else if (Object.keys(data.users).length >= 4 && data.game.secondsToStart === 0) {
 	    	data.game.secondsToStart = 0;
 	    	data.game.status = 'inProgress';
+	    
+	    	
 	    } else {
+	    	//assign a team to draw / guess...
+	    	//assign a player to draw
+	    	
+	    	//assign a player to set a word
+	    	
+	    	data.game.drawingTeam = 'a';
+	    	data.game.drawingPlayer = pickRandomProperty(data.teams[data.game.drawingTeam]);
+	    	
+	    	data.game.setWordPlayer = pickRandomProperty(data.teams[ data.game.drawingTeam === 'a' ? 'b' : 'a' ]);
+	    	
 	    	data.game.secondsToStart = 10;
 	    	data.game.status = 'pending';
 	    }

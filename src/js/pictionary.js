@@ -156,7 +156,22 @@
 	        
 	        	//clear any timer loops and handle next page
 	        	clearInterval(window.intId);
-	        	pages.open('/set-word');
+	        	
+	        	//if player is assigned to set word
+	        	console.log(data.game.setWordPlayer);
+	        	console.log(comms.get_uid());
+	        	console.log(data.game.setWordPlayer == comms.get_uid());
+	        	if ( data.game.setWordPlayer == comms.get_uid()) {
+	        		pages.open('/set-word');
+	        	}
+	        	//else if player is assigned to draw
+	        		//go to draw word
+	        	
+	        	//else if player is on a team that is drawing
+	        		//go to guess word
+	        		
+	        	//else if player is on the opposing team
+	        		//go to watch team...
 	        
 	        } else {
 	        	

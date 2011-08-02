@@ -4,7 +4,7 @@ var PIC = window.PIC || {};
 PIC.comms = function (url) {
 
     var socket = io.connect(url); 
-        
+
     return {
         start: function () {
         	//v0.7.x of socket.io means this is not needed as it is done in the initialisation
@@ -38,6 +38,9 @@ PIC.comms = function (url) {
         disconnect: function (callback) {
             socket.on('disconnect', callback);
             return this;
+        },
+        get_uid: function() {
+        	return socket.socket.sessionid;
         }
     };
 };
