@@ -27,27 +27,7 @@ var http = require('http'),
     
     
     
-server = http.createServer(function (request, response) {
-    /*
-    
-    Experimental code for setting up url handlers external to this module. 
-    var url = request.url,
-        type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')],
-        i,
-        r;
-    
-    for (i=0; i < handlers.length; i++) {
-        r = RegExp(handlers[i].pattern)
-        if (r.test(url)) {
-            handlers[i].callback();
-            console.log('Winning url: ', url, ' and its handler: ' + handlers[i].pattern)
-        }
-    }
-    response.writeHead(200, { 'Content-Type': 'text/html' });
-    response.end('Hello wolrd');
-    
-    */
-    
+server = http.createServer(function (request, response) {    
     var url = request.url,
         type = mimeTypes[url.replace(/.*\.([a-zA-Z]+)$/g, '$1')],
         cookies = {};
